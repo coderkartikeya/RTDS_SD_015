@@ -1,24 +1,22 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import History from '../models/History.js';
+import { User } from '../models/user.models.js';
+import { History } from '../models/history.models.js';
+// Include this if using history
 
-const JWT_SECRET = process.env.REFRESH_TOKEN_SECRET; 
+const JWT_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
-
-exports.signup = async (req, res) => {
+const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-
     
+
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({ message: 'Email already registered' });
 
-  
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
     const user = new User({
       name,
       email,
@@ -33,8 +31,7 @@ exports.signup = async (req, res) => {
   }
 };
 
-
-exports.login = async (req, res) => {
+const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -46,7 +43,6 @@ exports.login = async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: 'Invalid email or password' });
 
-    
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
       expiresIn: '1d',
     });
@@ -61,10 +57,11 @@ exports.login = async (req, res) => {
   }
 };
 
-
-exports.getProfile = async (req, res) => {
+const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select('-password').populate('history');
+    const user = await User.findById(req.userId)
+      .select('-password')
+      .populate('history');
     if (!user) return res.status(404).json({ message: 'User not found' });
     res.json(user);
   } catch (err) {
@@ -72,12 +69,25 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-
-exports.getHistory = async (req, res) => {
+const getHistory = async (req, res) => {
   try {
-    const history = await History.find({ user: req.userId }).sort({ createdAt: -1 });
+    const history = await History.find({ user: req.userId }).sort({
+      createdAt: -1,
+    });
     res.json(history);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch history', error: err.message });
   }
+};
+const check = async (req, res) => {
+    console.log(req);
+    res.status(200).json({message:"ok done....."});
+  };
+
+export  {
+  signup,
+  login,
+  getProfile,
+  getHistory,
+  check
 };

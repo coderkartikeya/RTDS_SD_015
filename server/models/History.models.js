@@ -1,6 +1,6 @@
 // models/History.js
 
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const historySchema = new mongoose.Schema({
   user: {
@@ -46,4 +46,4 @@ const historySchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('History', historySchema);
+export const History=mongoose.model('History',historySchema);

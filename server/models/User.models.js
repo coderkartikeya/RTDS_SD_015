@@ -1,5 +1,4 @@
 // models/User.js
-
 import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
@@ -40,6 +39,6 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'History',
   }]
-});
+},{timestamps:true});
 
-module.exports = mongoose.model('User', userSchema);
+export const User=mongoose.model('User',userSchema);

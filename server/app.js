@@ -12,17 +12,14 @@ app.use(cors({
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
   }));
-app.use(express.json({limit:'16kb'}));// 
+app.use(express.json());// 
 app.use(express.urlencoded({extended:true,limit:"16kb"}))// url se bhi data ayega uske liye h 
 app.use(cookieParser());// cookies read karne ke liye
 app.use(express.static("public"))
 
-// import useRouter from './routes/user.routes.js'
-// import useCommunity from './routes/community.routes.js'
-// import useMessages from './routes/message.routes.js'
-// // routes /api/version/kahan janan h 
-// app.use("/api/v1/users",useRouter);
-// app.use("/api/v1/community",useCommunity);
-// app.use("/api/v1/messages",useMessages);
+import useRouter from './routes/user.routes.js'
+// // // routes /api/version/kahan janan h 
+app.use("/api/v1/users",useRouter);
 
-export {app}
+
+export {app};
